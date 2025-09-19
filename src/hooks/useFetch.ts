@@ -1,34 +1,22 @@
-'use client';
+"use client";
+import { useState, useEffect } from "react";
 
-import { useState, useEffect } from 'react';
-
-interface UseFetchResult<T> {
-  data: T | null;
-  loading: boolean;
-  error: string | null;
-}
-
-export function useFetch<T>(url: string): UseFetchResult<T> {
+const useFetch = <T,>(url: string) => {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        
         const response = await fetch(url);
-        
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error("Network response was not ok");
         }
-        
         const result = await response.json();
         setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+      } catch (error) {
+        setError(error as Error);
       } finally {
         setLoading(false);
       }
@@ -38,4 +26,6 @@ export function useFetch<T>(url: string): UseFetchResult<T> {
   }, [url]);
 
   return { data, loading, error };
-}
+};
+
+export default useFetch;
