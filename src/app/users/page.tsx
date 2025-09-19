@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import useFetch from "@/hooks/useFetch";
 import { User } from "@/types";
 import UserModal from "@/components/ui/UserModal";
@@ -59,10 +60,16 @@ const UsersPage = () => {
               </thead>
               <tbody>
                 {users?.map((user) => (
-                  <tr
+                  <motion.tr
                     key={user.id}
                     onClick={() => setSelectedUser(user)}
-                    className="cursor-pointer border-b border-gray-100 last:border-b-0 hover:bg-blue-50"
+                    className="cursor-pointer border-b border-gray-100 last:border-b-0"
+                    whileHover={{
+                      x: 12,
+                      backgroundColor: "#eff6ff",
+                      boxShadow: "0 4px 20px rgba(59, 130, 246, 0.15)",
+                      transition: { duration: 0.4, ease: "easeOut" }
+                    }}
                   >
                     <td className="py-4 px-6 flex items-center">
                       <div className="bg-blue-100 text-blue-800 rounded-full h-10 w-10 flex items-center justify-center mr-3">
@@ -76,7 +83,7 @@ const UsersPage = () => {
                         {user.company.name}
                       </span>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
