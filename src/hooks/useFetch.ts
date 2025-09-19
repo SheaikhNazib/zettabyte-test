@@ -11,12 +11,24 @@ const useFetch = <T,>(url: string) => {
       try {
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          // Provide more specific error messages
+          if (response.status === 404) {
+            throw new Error(`Failed to load data: Endpoint not found (${response.status})`);
+          } else if (response.status >= 500) {
+            throw new Error(`Server error: Unable to process request (${response.status})`);
+          } else {
+            throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+          }
         }
         const result = await response.json();
         setData(result);
       } catch (error) {
-        setError(error as Error);
+        // Handle network errors and other fetch failures
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          setError(new Error('Network error: Unable to connect to server'));
+        } else {
+          setError(error as Error);
+        }
       } finally {
         setLoading(false);
       }

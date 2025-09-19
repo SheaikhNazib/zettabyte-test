@@ -6,11 +6,19 @@ import useFetch from '@/hooks/useFetch';
 import { Post } from '@/types';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/ui/Pagination';
+import ErrorDisplay from '@/components/ui/ErrorDisplay';
 
 const PostsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [useInvalidEndpoint, setUseInvalidEndpoint] = useState(false);
   const postsPerPage = 12;
-  const { data: posts, loading, error } = useFetch<Post[]>('https://jsonplaceholder.typicode.com/posts');
+  
+  // Use invalid endpoint to demonstrate error handling
+  const endpoint = useInvalidEndpoint 
+    ? 'https://jsonplaceholder.typicode.com/invalid-posts' 
+    : 'https://jsonplaceholder.typicode.com/posts';
+    
+  const { data: posts, loading, error } = useFetch<Post[]>(endpoint);
   const totalPages = posts ? Math.ceil(posts.length / postsPerPage) : 0;
   const currentPosts = posts ? posts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage) : [];
 
@@ -49,22 +57,92 @@ const PostsPage = () => {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 block bg-blue-100 px-3 py-1 rounded -mx-4">
-          Posts
-        </h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Posts</h3>
-          <p className="text-red-600">{error?.message}</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4 sm:mb-0 block bg-blue-100 px-3 py-1 rounded -mx-4 sm:mx-0">
+            Posts
+          </h1>
+          
+          {/* Error Demonstration Controls */}
+          <div className="flex flex-col sm:flex-row gap-2">
+            <button
+              onClick={() => setUseInvalidEndpoint(false)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                !useInvalidEndpoint
+                  ? 'bg-green-500 text-white shadow-md'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              ✅ Valid Endpoint
+            </button>
+            <button
+              onClick={() => setUseInvalidEndpoint(true)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                useInvalidEndpoint
+                  ? 'bg-red-500 text-white shadow-md'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              ❌ Simulate Error
+            </button>
+          </div>
         </div>
+        
+        {useInvalidEndpoint && (
+          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-800">
+              <strong>🧪 Demo Mode:</strong> Currently using an invalid endpoint (<code className="bg-yellow-200 px-1 rounded">invalid-posts</code>) to demonstrate error handling.
+            </p>
+          </div>
+        )}
+        
+        <ErrorDisplay 
+          error={error} 
+          title="Failed to load posts"
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 block bg-blue-100 px-3 py-1 rounded -mx-4">
-        Posts
-      </h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4 sm:mb-0 block bg-blue-100 px-3 py-1 rounded -mx-4 sm:mx-0">
+          Posts
+        </h1>
+        
+        {/* Error Demonstration Controls */}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <button
+            onClick={() => setUseInvalidEndpoint(false)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              !useInvalidEndpoint
+                ? 'bg-green-500 text-white shadow-md'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            ✅ Valid Endpoint
+          </button>
+          <button
+            onClick={() => setUseInvalidEndpoint(true)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              useInvalidEndpoint
+                ? 'bg-red-500 text-white shadow-md'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            ❌ Simulate Error
+          </button>
+        </div>
+      </div>
+      
+      {useInvalidEndpoint && (
+        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-800">
+            <strong>🧪 Demo Mode:</strong> Currently using an invalid endpoint (<code className="bg-yellow-200 px-1 rounded">invalid-posts</code>) to demonstrate error handling.
+          </p>
+        </div>
+      )}
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         variants={containerVariants}

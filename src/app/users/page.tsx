@@ -4,12 +4,18 @@ import { motion } from "framer-motion";
 import useFetch from "@/hooks/useFetch";
 import { User } from "@/types";
 import UserModal from "@/components/ui/UserModal";
+import ErrorDisplay from "@/components/ui/ErrorDisplay";
 
 const UsersPage = () => {
-  const { data: users, loading, error } = useFetch<User[]>(
-    "https://jsonplaceholder.typicode.com/users"
-  );
+  const [useInvalidEndpoint, setUseInvalidEndpoint] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  
+  // Use invalid endpoint to demonstrate error handling
+  const endpoint = useInvalidEndpoint 
+    ? 'https://jsonplaceholder.typicode.com/invalid-users' 
+    : 'https://jsonplaceholder.typicode.com/users';
+    
+  const { data: users, loading, error } = useFetch<User[]>(endpoint);
 
   
 
@@ -26,14 +32,53 @@ const UsersPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full mx-4">
-          <div className="text-red-500 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h2 className="text-2xl font-bold mb-2">Error Loading Data</h2>
-            <p>{error.message}</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
+        <div className="container mx-auto max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+              <div className="mb-4 lg:mb-0">
+                <h1 className="text-3xl font-bold">Users Directory</h1>
+                <p className="opacity-80 mt-2">Browse through our user list and click to see details</p>
+              </div>
+              
+              {/* Error Demonstration Controls */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setUseInvalidEndpoint(false)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    !useInvalidEndpoint
+                      ? 'bg-white text-blue-600 shadow-md'
+                      : 'bg-blue-500 text-white hover:bg-blue-400'
+                  }`}
+                >
+                  ✅ Valid Endpoint
+                </button>
+                <button
+                  onClick={() => setUseInvalidEndpoint(true)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    useInvalidEndpoint
+                      ? 'bg-red-500 text-white shadow-md'
+                      : 'bg-blue-500 text-white hover:bg-blue-400'
+                  }`}
+                >
+                  ❌ Simulate Error
+                </button>
+              </div>
+            </div>
+            
+            {useInvalidEndpoint && (
+              <div className="mt-4 p-3 bg-yellow-100 text-yellow-800 rounded-lg text-sm">
+                <strong>🧪 Demo Mode:</strong> Using invalid endpoint (<code className="bg-yellow-200 px-1 rounded">invalid-users</code>) to demonstrate error handling.
+              </div>
+            )}
+          </div>
+          
+          <div className="p-6">
+            <ErrorDisplay 
+              error={error} 
+              title="Failed to load users"
+              onRetry={() => window.location.reload()}
+            />
           </div>
         </div>
       </div>
@@ -44,8 +89,42 @@ const UsersPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8 px-4">
       <div className="container mx-auto max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
-          <h1 className="text-3xl font-bold">Users Directory</h1>
-          <p className="opacity-80 mt-2">Browse through our user list and click to see details</p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div className="mb-4 lg:mb-0">
+              <h1 className="text-3xl font-bold">Users Directory</h1>
+              <p className="opacity-80 mt-2">Browse through our user list and click to see details</p>
+            </div>
+            
+            {/* Error Demonstration Controls */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setUseInvalidEndpoint(false)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  !useInvalidEndpoint
+                    ? 'bg-white text-blue-600 shadow-md'
+                    : 'bg-blue-500 text-white hover:bg-blue-400'
+                }`}
+              >
+                ✅ Valid Endpoint
+              </button>
+              <button
+                onClick={() => setUseInvalidEndpoint(true)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  useInvalidEndpoint
+                    ? 'bg-red-500 text-white shadow-md'
+                    : 'bg-blue-500 text-white hover:bg-blue-400'
+                }`}
+              >
+                ❌ Simulate Error
+              </button>
+            </div>
+          </div>
+          
+          {useInvalidEndpoint && (
+            <div className="mt-4 p-3 bg-yellow-100 text-yellow-800 rounded-lg text-sm">
+              <strong>🧪 Demo Mode:</strong> Using invalid endpoint (<code className="bg-yellow-200 px-1 rounded">invalid-users</code>) to demonstrate error handling.
+            </div>
+          )}
         </div>
         
         <div className="p-6">
