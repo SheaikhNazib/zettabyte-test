@@ -9,9 +9,9 @@ export default function Sidebar() {
   const pathname = usePathname() || "/";
 
   const links = [
-    { href: "/", label: "Home", icon: "🏠" },
-    { href: "/posts", label: "Posts", icon: "📝" },
-    { href: "/users", label: "Users", icon: "👥" },
+    { href: "/", label: "Home", icon: "🏠", color: "home" },
+    { href: "/posts", label: "Posts", icon: "📝", color: "posts" },
+    { href: "/users", label: "Users", icon: "👥", color: "users" },
   ];
 
   return (
@@ -37,7 +37,7 @@ export default function Sidebar() {
           <Link
             key={l.href}
             href={l.href}
-            className={`nav-link ${pathname === l.href ? "active" : ""}`}
+            className={`nav-link ${l.color} ${pathname === l.href ? "active" : ""}`}
             aria-label={l.label}
           >
             <span className="icon" aria-hidden>

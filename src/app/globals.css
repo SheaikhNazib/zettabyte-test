@@ -33,11 +33,12 @@ body {
 
 .sidebar {
   width: 220px;
-  background: #f5f5f7;
-  border-right: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-right: 2px solid rgba(255,255,255,0.1);
   padding: 1rem;
   box-sizing: border-box;
-  transition: width 0.2s ease;
+  transition: width 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .sidebar.closed {
@@ -54,6 +55,8 @@ body {
 .sidebar-title {
   margin: 0;
   font-size: 1.05rem;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 /* When sidebar is collapsed hide textual labels and center icons */
@@ -73,33 +76,143 @@ body {
 
 .sidebar.closed .nav-link {
   justify-content: center;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+  padding: 0.45rem 0.35rem;
+  min-width: 56px;
 }
 
+/* When collapsed keep icon circle visible and centered */
+.sidebar.closed .nav-link .icon {
+  margin: 0; /* remove spacing */
+}
+
+/* Reduce transform when collapsed to avoid overflow */
+.sidebar.closed .nav-link:hover {
+  transform: none;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Slightly larger gap between icon and label for readability */
+.nav-link { gap: 0.75rem; }
+
 .sidebar-toggle {
-  background: transparent;
-  border: none;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
   cursor: pointer;
   font-size: 0.9rem;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: background 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255,255,255,0.3);
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .nav-link {
-  padding: 0.5rem 0.6rem;
-  border-radius: 6px;
-  color: var(--foreground);
+  padding: 0.75rem 0.6rem;
+  border-radius: 8px;
+  color: #ffffff;
   text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: visible;
 }
 
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav-link:hover::before {
+  left: 100%;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateX(5px);
+}
+
+/* Icon circle */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  flex: 0 0 36px;
+  font-size: 16px;
+  line-height: 1;
+  overflow: hidden; /* clip emoji/SVG so the circle remains perfect */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12) inset;
+  vertical-align: middle;
+}
+
+/* Ensure any svg or img inside icon fits the circle */
+.icon svg,
+.icon img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+.nav-link .label {
+  white-space: nowrap;
+}
+
+/* Theme-specific icon backgrounds (subtle) */
+.nav-link.home .icon { background: rgba(59,130,246,0.12); }
+.nav-link.posts .icon { background: rgba(16,185,129,0.12); }
+.nav-link.users .icon { background: rgba(139,92,246,0.12); }
+
 .nav-link.active {
-  background: rgba(0,0,0,0.06);
+  background: rgba(255,255,255,0.2);
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Color variations for nav links */
+.nav-link.home {
+  border-left: 4px solid #3b82f6;
+}
+
+.nav-link.posts {
+  border-left: 4px solid #10b981;
+}
+
+.nav-link.users {
+  border-left: 4px solid #8b5cf6;
+}
+
+.nav-link.home.active {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.nav-link.posts.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.nav-link.users.active {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 }
 
 .app-main {
