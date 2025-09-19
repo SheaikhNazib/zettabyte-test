@@ -16,28 +16,40 @@ const UserDetailPage = ({ params }: { params?: Promise<{ userId: string }> }) =>
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        let mounted = true;
+        const controller = new AbortController();
+
+        const fetchUserData = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(
+                    `https://jsonplaceholder.typicode.com/users/${userId}`,
+                    { signal: controller.signal }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+
+                const userData = await response.json();
+                if (mounted) setUser(userData);
+            } catch (err) {
+                if (err instanceof DOMException && err.name === 'AbortError') return;
+                if (mounted) setError(err instanceof Error ? err.message : 'An error occurred');
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        };
+
         if (userId) {
             fetchUserData();
         }
+
+        return () => {
+            mounted = false;
+            controller.abort();
+        };
     }, [userId]);
-
-    const fetchUserData = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`);
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user data');
-            }
-
-            const userData = await response.json();
-            setUser(userData);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     if (loading) {
         return (
