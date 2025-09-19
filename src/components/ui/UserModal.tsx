@@ -1,4 +1,5 @@
-    "use client";
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
 import { User } from "@/types";
 
 interface UserModalProps {
@@ -7,19 +8,44 @@ interface UserModalProps {
 }
 
 const UserModal = ({ user, onClose }: UserModalProps) => {
-  if (!user) {
-    return null;
-  }
-
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-gray-100 relative overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {user && (
+        <motion.div
+          className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div
+            className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-gray-100 relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            initial={{ 
+              opacity: 0, 
+              scale: 0.8, 
+              y: 50,
+              rotateX: -15 
+            }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1, 
+              y: 0,
+              rotateX: 0 
+            }}
+            exit={{ 
+              opacity: 0, 
+              scale: 0.8, 
+              y: 50,
+              rotateX: 15 
+            }}
+            transition={{ 
+              duration: 0.4, 
+              ease: "easeOut",
+              scale: { type: "spring", stiffness: 300, damping: 25 }
+            }}
+          >
         {/* Subtle gradient header */}
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-t-3xl"></div>
 
@@ -116,8 +142,10 @@ const UserModal = ({ user, onClose }: UserModalProps) => {
             </p>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
