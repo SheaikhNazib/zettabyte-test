@@ -24,7 +24,9 @@ export default function Sidebar() {
           title={open ? "Collapse sidebar" : "Open sidebar"}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? "◀" : "▶"}
+          <span className="icon" aria-hidden>
+            {open ? "◀" : "▶"}
+          </span>
         </button>
 
         <h2 className="sidebar-title">
