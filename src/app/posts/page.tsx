@@ -1,7 +1,7 @@
-'use client';
+ 'use client';
 
 import React from 'react';
-import { useFetch } from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { Post } from '@/types';
 import PostCard from '@/components/PostCard';
 
@@ -32,7 +32,7 @@ const PostsPage = () => {
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Posts</h1>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Posts</h3>
-                    <p className="text-red-600">{error}</p>
+                    <p className="text-red-600">{error?.message}</p>
                 </div>
             </div>
         );

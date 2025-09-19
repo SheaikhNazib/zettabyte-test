@@ -25,6 +25,88 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* App layout */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #f5f5f7;
+  border-right: 1px solid rgba(0,0,0,0.06);
+  padding: 1rem;
+  box-sizing: border-box;
+  transition: width 0.2s ease;
+}
+
+.sidebar.closed {
+  width: 56px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+/* When sidebar is collapsed hide textual labels and center icons */
+.sidebar.closed .label {
+  display: none;
+}
+
+.sidebar.closed .sidebar-header {
+  justify-content: center;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar.closed .nav-link {
+  justify-content: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.sidebar-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.nav-link.active {
+  background: rgba(0,0,0,0.06);
+  font-weight: 600;
+}
+
+.app-main {
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+
 /* Custom utility for text truncation */
 .line-clamp-3 {
   display: -webkit-box;
